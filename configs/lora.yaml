@@ -1,0 +1,73 @@
+# LoRA model configuration
+
+model:
+  # Model architecture
+  name: "distilbert-base-uncased"
+  dropout_rate: 0.1
+  
+  # LoRA specific parameters
+  lora:
+    rank: 8
+    alpha: 16
+    dropout: 0.1
+    # Target modules for DistilBERT: attention and feed-forward layers
+    target_modules: ["q_lin", "v_lin", "k_lin", "out_lin", "lin1", "lin2"]
+  
+  # Task-specific configuration
+  tasks:
+    ag_news:
+      num_classes: 4
+      class_names: ["World", "Sports", "Business", "Sci/Tech"]
+    sst2:
+      num_classes: 2
+      class_names: ["negative", "positive"]
+  
+  # Whether to freeze the encoder (for LoRA, we freeze the base model and only train LoRA layers)
+  freeze_encoder: true  # This is handled by PEFT, but we keep for consistency
+
+# Training configuration
+training:
+  # Optimization
+  optimizer: "adamw"
+  learning_rate: 1e-4  # LoRA often uses a higher learning rate
+  weight_decay: 0.01
+  
+  # Learning rate schedule
+  lr_scheduler: "linear"  # Linear warmup followed by linear decay
+  warmup_steps: 500
+  
+  # Batch sizes
+  batch_size:
+    train: 16
+    validation: 16
+    test: 16
+  
+  # Training duration
+  max_epochs: 3
+  
+  # Evaluation and logging
+  eval_steps: 500
+  log_steps: 100
+  
+  # Gradient clipping
+  max_grad_norm: 1.0
+
+# Output configuration
+output:
+  # Directory to save model checkpoints and logs
+  checkpoint_dir: "./outputs/lora/checkpoints"
+  log_dir: "./outputs/lora/logs"
+  
+  # Whether to save the best model based on validation performance
+  save_best_only: true
+  metric_for_best_model: "eval_accuracy"
+  
+  # Whether to push to Hugging Face Hub (requires token)
+  push_to_hub: false
+  hub_model_id: ""  # e.g., "username/lora-model"
+
+# Reproducibility
+seed: 42
+
+# Device configuration
+device: "auto"  # Will use CUDA if available, otherwise CPU

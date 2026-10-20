@@ -1,0 +1,46 @@
+# Data configuration for Multi-LoRA + MoE project
+
+data:
+  # Dataset names from Hugging Face datasets library
+  dataset_names:
+    - "ag_news"
+    - "sst2"
+  
+  # Text column names for each dataset
+  text_columns:
+    ag_news: "text"
+    sst2: "sentence"
+  
+  # Label column names for each dataset
+  label_columns:
+    ag_news: "label"
+    sst2: "label"
+  
+  # Number of classes for each dataset
+  num_classes:
+    ag_news: 4
+    sst2: 2
+  
+  # Class names for each dataset (for readability)
+  class_names:
+    ag_news: ["World", "Sports", "Business", "Sci/Tech"]
+    sst2: ["negative", "positive"]
+  
+  # Maximum sequence length for tokenization
+  max_sequence_length: 128
+  
+  # Batch sizes for training, validation, and testing
+  batch_size:
+    train: 16
+    validation: 16
+    test: 16
+  
+  # Random seed for reproducibility
+  seed: 42
+  
+  # Whether to use a subset of data for quick testing
+  use_subset: false
+  subset_size: 1000  # Number of examples to use if use_subset is true
+  
+  # Directory to cache datasets
+  cache_dir: "./data/cache"
